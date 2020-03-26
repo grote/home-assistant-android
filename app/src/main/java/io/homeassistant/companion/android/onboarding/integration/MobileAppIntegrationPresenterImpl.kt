@@ -2,7 +2,6 @@ package io.homeassistant.companion.android.onboarding.integration
 
 import android.os.Build
 import android.util.Log
-import com.google.firebase.iid.FirebaseInstanceId
 import io.homeassistant.companion.android.BuildConfig
 import io.homeassistant.companion.android.domain.integration.DeviceRegistration
 import io.homeassistant.companion.android.domain.integration.IntegrationUseCase
@@ -27,10 +26,8 @@ class MobileAppIntegrationPresenterImpl @Inject constructor(
     override fun onRegistrationAttempt() {
 
         view.showLoading()
-        val instanceId = FirebaseInstanceId.getInstance().instanceId
-        instanceId.addOnSuccessListener {
             mainScope.launch {
-                val token = it.token
+                val token = null
 
                 val deviceRegistration = DeviceRegistration(
                     "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
@@ -47,11 +44,6 @@ class MobileAppIntegrationPresenterImpl @Inject constructor(
                     view.showError()
                 }
             }
-        }
-        instanceId.addOnFailureListener {
-            Log.e(TAG, "Couldn't get FirebaseInstanceId", it)
-            view.showError()
-        }
     }
 
     override fun onToggleZoneTracking(enabled: Boolean) {
